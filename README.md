@@ -3,12 +3,13 @@ System for logging events that happen in a can ban system.. shit I spelt Kanban 
 
 
 first off how you can break it/ things to know:
-- modify the buttonMapping.cvs so that Time is not the last field will break 
+- modify the buttonMapping.cvs so that Time is not the last field will break everything  
 - changing the order of the buttonMapping.cvs, if we need to add a field add it just in front of the time feild
-- if you don't here a beep it's not working
-- forget to use the correct bin size
-- forget to change buttonMappings.cvs befor doing a job new Job
-- forget to hit save when filling changing buttonMappings.csv
+- if you don't here a beep it's not working, if you do here a beep it just logged your work. 
+- remember to use the correct batch size 
+- remember to change buttonMappings.cvs befor doing a job new Job
+- remember to hit save when filling changing buttonMappings.csv ( you can save while python scrip is 
+running... at least on a GNU system. )
 
 
 
@@ -17,13 +18,13 @@ how it works:
 You push a button and the arduino sends a message over the serial port. It sends 
 "A" for button A "B" for button B etc
 
-The python script receives the message and pings it back to the arduino
-If the arduino receives the message back then it makes a noise on that buttons
+The python script receives the message and pings it back to the arduino after logging
+the buttons coroalting data.  If the arduino receives
+the message back then it makes a noise on that buttons
 speaker, signaling to the user that things are getting logged.
 
 For each button press the python script reads the values from the
-button Mapping.csv file
-and then logs the data associated with that button in the logFile.csv 
+buttonMapping.csv file and then logs the data associated with that button in the logFile.csv 
 
 Graphing the data in logFile.csv can help you see what processes are faster 
 which people are best at which jobs, what your longest processes are, etc. 
