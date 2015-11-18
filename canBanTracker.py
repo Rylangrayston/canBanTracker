@@ -1,6 +1,9 @@
 import serial
-ser = serial.Serial('/dev/ttyACM5', 9600)
+ser = serial.Serial('/dev/ttyACM0', 9600)
 import time
+
+
+import sys
 
 logCount = 0
 import time
@@ -12,6 +15,7 @@ import time
 while True:
     mesage = ser.read()
     print "Recived this on serial: ", mesage
+    #sys.stdout.write(mesage)
 
     # update button mappings
     buttonMappings = open('buttonMappings.csv', 'r')
