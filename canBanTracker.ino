@@ -6,27 +6,43 @@ int ascii_E = 69;
 int ascii_F = 70;
 int ascii_G = 71;
 int ascii_H = 72;
+int ascii_I = 73;
 
 int ledPin = 13;
+int ledPinConnection = 22;
 
-int buttonA_Pin = 22;
-int buttonB_Pin = 24;
-int buttonC_Pin = 26;
-int buttonD_Pin = 28;
-int buttonE_Pin = 30;
-int buttonF_Pin = 32;
-int buttonG_Pin = 34;
-int buttonH_Pin = 36;
+int buttonA_Pin = 28; //new 24 26 28, 30 32 34, 36 38 40, 42 44 46
+int buttonB_Pin = 34;
+int buttonC_Pin = 40;
+int buttonD_Pin = 46;
+int buttonE_Pin = 4;
+int buttonF_Pin = 4;
+int buttonG_Pin = 4;
+int buttonH_Pin = 4;
 
 
-int peizoA_Pin = 23;
-int peizoB_Pin = 25;
-int peizoC_Pin = 27;
-int peizoD_Pin = 29;
+int peizoA_Pin = 26;
+int peizoB_Pin = 32;
+int peizoC_Pin = 38;
+int peizoD_Pin = 44;
 int peizoE_Pin = 31;
 int peizoF_Pin = 33;
 int peizoG_Pin = 35;
 int peizoH_Pin = 37;
+
+int ledA_Pin = 24; //new 
+int ledB_Pin = 30; 
+int ledC_Pin = 36; 
+int ledD_Pin = 42; 
+int ledE_Pin = 3; 
+int ledF_Pin = 3; 
+int ledG_Pin = 3; 
+int ledH_Pin = 3; 
+
+
+unsigned long timeAtLastConnection = 0;
+int checkConnectionPeriod = 10000;
+int connectionCount = 0;
 
 unsigned long buttonA_NextDetectTime = 0;
 unsigned long buttonB_NextDetectTime = 0;
@@ -63,9 +79,10 @@ int buzzState = 0;
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(19200);
 
   pinMode(ledPin, OUTPUT);
+  pinMode(ledPinConnection, OUTPUT);
   
   pinMode(buttonA_Pin, INPUT_PULLUP);
   pinMode(buttonB_Pin, INPUT_PULLUP);
@@ -84,6 +101,9 @@ void setup()
   pinMode(peizoF_Pin, OUTPUT);
   pinMode(peizoG_Pin, OUTPUT);
   pinMode(peizoH_Pin, OUTPUT);
+  
+  pinMode(ledA_Pin, OUTPUT); //new
+  pinMode(ledB_Pin, OUTPUT); 
 
 }
 
@@ -127,6 +147,8 @@ void confermLoged()
    if (rxMesage == ascii_F) {peizoF_BuzzUntillTime = millis() + buzzDuration;}
    if (rxMesage == ascii_G) {peizoG_BuzzUntillTime = millis() + buzzDuration;}
    if (rxMesage == ascii_H) {peizoH_BuzzUntillTime = millis() + buzzDuration;}
+   if (rxMesage == ascii_I) {digitalWrite(ledPinConnection, HIGH); timeAtLastConnection = millis();}   
+
 
    
  }
@@ -139,27 +161,40 @@ void pulseBuzzers()
  if (buzzCount > halfBuzzDelay) {buzzState = 1; digitalWrite(13,HIGH);}
  else {buzzState = 0;digitalWrite(13,LOW);}
  
-if (millis() < peizoA_BuzzUntillTime) {digitalWrite(peizoA_Pin, buzzState);}  
-if (millis() < peizoB_BuzzUntillTime) {digitalWrite(peizoB_Pin, buzzState);}  
-if (millis() < peizoC_BuzzUntillTime) {digitalWrite(peizoC_Pin, buzzState);}  
-if (millis() < peizoD_BuzzUntillTime) {digitalWrite(peizoD_Pin, buzzState);}  
-if (millis() < peizoE_BuzzUntillTime) {digitalWrite(peizoE_Pin, buzzState);}  
-if (millis() < peizoF_BuzzUntillTime) {digitalWrite(peizoF_Pin, buzzState);}  
-if (millis() < peizoG_BuzzUntillTime) {digitalWrite(peizoG_Pin, buzzState);}  
-if (millis() < peizoH_BuzzUntillTime) {digitalWrite(peizoH_Pin, buzzState);}  
+if (millis() < peizoA_BuzzUntillTime) {digitalWrite(peizoA_Pin, buzzState); digitalWrite (ledA_Pin, HIGH);}  else{digitalWrite(ledA_Pin, LOW);}
+if (millis() < peizoB_BuzzUntillTime) {digitalWrite(peizoB_Pin, buzzState); digitalWrite (ledB_Pin, HIGH);}  else{digitalWrite(ledB_Pin, LOW);}  
+if (millis() < peizoC_BuzzUntillTime) {digitalWrite(peizoC_Pin, buzzState); digitalWrite (ledC_Pin, HIGH);}  else{digitalWrite(ledC_Pin, LOW);}
+if (millis() < peizoD_BuzzUntillTime) {digitalWrite(peizoD_Pin, buzzState); digitalWrite (ledD_Pin, HIGH);}  else{digitalWrite(ledD_Pin, LOW);}  
+if (millis() < peizoE_BuzzUntillTime) {digitalWrite(peizoE_Pin, buzzState); digitalWrite (ledE_Pin, HIGH);}  else{digitalWrite(ledE_Pin, LOW);}  
+if (millis() < peizoF_BuzzUntillTime) {digitalWrite(peizoF_Pin, buzzState); digitalWrite (ledF_Pin, HIGH);}  else{digitalWrite(ledF_Pin, LOW);}  
+if (millis() < peizoG_BuzzUntillTime) {digitalWrite(peizoG_Pin, buzzState); digitalWrite (ledG_Pin, HIGH);}  else{digitalWrite(ledG_Pin, LOW);}
+if (millis() < peizoH_BuzzUntillTime) {digitalWrite(peizoH_Pin, buzzState); digitalWrite (ledH_Pin, HIGH);}  else{digitalWrite(ledH_Pin, LOW);}
+}
 
 
-
+void ping()
+{
+connectionCount += 1;
+if (connectionCount > checkConnectionPeriod)
+{
+connectionCount = 0;
+ Serial.print('I');
+ if (millis() - timeAtLastConnection > 1200){ digitalWrite(ledPinConnection, LOW); }
+ 
+}
+ 
+}
  
  
  // if millis() < piezroABuzzUntillTime
-}
+
 
 void loop()
 {
  checkButtons();
  confermLoged();
  pulseBuzzers();
+ ping();
  //blinkLight();
 }
 

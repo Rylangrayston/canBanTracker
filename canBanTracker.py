@@ -1,5 +1,5 @@
 import serial
-ser = serial.Serial('/dev/ttyACM0', 9600)
+ser = serial.Serial('/dev/ttyACM1', 19200)
 import time
 
 
@@ -14,7 +14,8 @@ import time
 
 while True:
     mesage = ser.read()
-    print "Recived this on serial: ", mesage
+    if mesage != 'I':
+    	print "Recived this on serial: ", mesage
     #sys.stdout.write(mesage)
 
     # update button mappings
@@ -34,6 +35,8 @@ while True:
     buttonMappings.close()
 
 
+    if mesage == 'I':
+        ser.write('I')
 
 
     
